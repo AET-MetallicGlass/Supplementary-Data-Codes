@@ -1,0 +1,282 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>reconstruct</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-04-28"><meta name="DC.source" content="reconstruct.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">RESIRE reconstruction</a></li><li><a href="#2">InputProjections - measured projections</a></li><li><a href="#3">Support - region of 1's and 0's defining where the reconstruction can exist</a></li><li><a href="#4">(voxels that are 0 in support will be set to 0 in reconstruction)</a></li><li><a href="#5">sum_rot_pjs - the sum of constant terms for the gradient descent: sum(A^T(b)),</a></li><li><a href="#6">A is the back projection operator, b is measured projection</a></li><li><a href="#7">xj, yj, zj - different dimension for rotated coordinates with oversampling</a></li><li><a href="#8">Rot_x, Rot_y - x and y dimension for rotated coordinates without oversampling</a></li><li><a href="#9">step_size - the step size for gradient descent</a></li><li><a href="#10">dtype - the type of output results, set as 'single' to save the memory</a></li><li><a href="#11">monitor_R - the flag for recording real space error</a></li><li><a href="#12">reconstruction - reconstruction after iteration</a></li><li><a href="#13">errR - Real space error (averaged L1 norm between the measured projections and backprojections)</a></li><li><a href="#14">Rarr_record - recorded L1 norm error array for all projections</a></li><li><a href="#15">Rarr2_record - recorded L2 norm error array for all projections</a></li></ul></div><h2 id="1">RESIRE reconstruction</h2><pre class="codeinput"><span class="comment">%%inputs:</span>
+</pre><pre class="codeoutput error">&#38169;&#35823;&#20351;&#29992; evalin
+&#20989;&#25968;&#25110;&#21464;&#37327; 'reconstruct' &#26080;&#27861;&#35782;&#21035;&#12290;
+</pre><h2 id="2">InputProjections - measured projections</h2><h2 id="3">Support - region of 1's and 0's defining where the reconstruction can exist</h2><h2 id="4">(voxels that are 0 in support will be set to 0 in reconstruction)</h2><h2 id="5">sum_rot_pjs - the sum of constant terms for the gradient descent: sum(A^T(b)),</h2><h2 id="6">A is the back projection operator, b is measured projection</h2><h2 id="7">xj, yj, zj - different dimension for rotated coordinates with oversampling</h2><h2 id="8">Rot_x, Rot_y - x and y dimension for rotated coordinates without oversampling</h2><h2 id="9">step_size - the step size for gradient descent</h2><h2 id="10">dtype - the type of output results, set as 'single' to save the memory</h2><h2 id="11">monitor_R - the flag for recording real space error</h2><pre class="codeinput"><span class="comment">%%outputs:</span>
+</pre><h2 id="12">reconstruction - reconstruction after iteration</h2><h2 id="13">errR - Real space error (averaged L1 norm between the measured projections and backprojections)</h2><h2 id="14">Rarr_record - recorded L1 norm error array for all projections</h2><h2 id="15">Rarr2_record - recorded L2 norm error array for all projections</h2><pre class="codeinput"><span class="keyword">function</span> obj = reconstruct(obj)
+projections = obj.InputProjections;
+Num_pj      = obj.NumProjs;
+step_size   = obj.step_size;
+dimx        = obj.Dim1;
+dimy        = obj.Dim2;
+dtype       = obj.dtype;
+Rot_x       = obj.Rot_x;
+Rot_y       = obj.Rot_y;
+iterations  = obj.numIterations;
+
+xj = double(obj.xj); yj = double(obj.yj); zj = double(obj.zj);
+
+sum_rot_pjs = obj.sum_rot_pjs;
+
+rec = zeros(dimy,dimx,dimy,dtype);
+rec_big = zeros(obj.n2_oversampled,obj.n1_oversampled,obj.n2_oversampled,dtype);
+ind_V	= My_volumn_index(size(rec_big),size(rec));
+<span class="keyword">if</span> obj.initial_model == 1
+    rec = obj.Support;
+    rec_big(ind_V(1,1):ind_V(1,2), ind_V(2,1):ind_V(2,2), ind_V(3,1):ind_V(3,2) ) = rec;
+<span class="keyword">end</span>
+dt      = (step_size/Num_pj/dimx);
+
+fprintf(<span class="string">'RESIRE: Reconstructing... \n\n'</span>);
+
+<span class="keyword">if</span> obj.monitor_R == 1
+    monitorR_loopLength = obj.monitorR_loopLength;
+    errR_arr = zeros(1,floor(iterations./monitorR_loopLength));
+    Rarr_record = zeros(Num_pj,floor(iterations./monitorR_loopLength));
+    Rarr2_record = zeros(Num_pj,floor(iterations./monitorR_loopLength));
+<span class="keyword">end</span>
+
+<span class="comment">% flag for using parallel calculation</span>
+<span class="keyword">if</span> obj.use_parallel
+  parforArg = Inf;
+<span class="keyword">else</span>
+  parforArg = 0;
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> iter=1:iterations
+    recK  = double(my_fft(rec_big));
+
+    <span class="comment">% compute rotated projections via Fourier Slice Theorem</span>
+    pj_cal = splinterp3(recK, yj, xj, zj);
+    pj_cal = real(fftshift(ifft2(ifftshift(pj_cal))));
+    pj_cal = croppedOut(pj_cal, [dimx,dimy,Num_pj] );
+
+    <span class="comment">% compute R factor</span>
+    <span class="keyword">if</span> obj.monitor_R == 1 &amp;&amp; mod(iter,monitorR_loopLength) == 0
+        Rarr = zeros(Num_pj,1);
+        Rarr2 = zeros(Num_pj,1);
+        <span class="keyword">for</span> i=1:Num_pj
+            pj = projections(:,:,i);
+            proj_i = pj_cal(:,:,i);
+            Rarr(i) = sum(sum( abs(proj_i - pj) ))/ sum(abs(pj(:)));
+            Rarr2(i) = norm( proj_i - pj, <span class="string">'fro'</span> )/ norm( pj, <span class="string">'fro'</span> );
+        <span class="keyword">end</span>
+        errR  = mean(Rarr);
+        errR2 = mean(Rarr2);
+        fprintf(<span class="string">'RESIRE: Iteration %d. Rfactor=%.4f, R2factor=%.4f \n'</span>,iter, errR, errR2);
+        errR_arr(iter./monitorR_loopLength) = errR;
+        Rarr_record(:,iter./monitorR_loopLength) = Rarr;
+        Rarr2_record(:,iter./monitorR_loopLength) = Rarr2;
+    <span class="keyword">else</span>
+        fprintf(<span class="string">'RESIRE: Iteration %d \n'</span>,iter);
+    <span class="keyword">end</span>
+
+    <span class="comment">% compute gradient &amp; apply gradient descent</span>
+    grad = -sum_rot_pjs;
+    <span class="keyword">parfor</span> (k = 1:Num_pj,parforArg)
+<span class="comment">%     for k = 1:Num_pj</span>
+        rot_pj_cal  = splinterp2(pj_cal(:,:,k), double(Rot_y(:,:,:,k)), double(Rot_x(:,:,:,k)));
+        grad = grad + rot_pj_cal;
+    <span class="keyword">end</span>
+    rec = rec - dt*grad;
+    rec = max(0,rec);
+
+    <span class="comment">% flag for saving temporary reconstruction</span>
+    <span class="keyword">if</span> obj.save_temp == 1 &amp;&amp; mod(iter,obj.save_loopLength) == 0
+        temp_filename = [obj.saveFilename,num2str(iter),<span class="string">'.mat'</span>];
+        save(temp_filename, <span class="string">'rec'</span>);
+    <span class="keyword">end</span>
+
+    rec_big( ind_V(1,1):ind_V(1,2), ind_V(2,1):ind_V(2,2), ind_V(3,1):ind_V(3,2) ) = rec;
+<span class="keyword">end</span>
+<span class="keyword">if</span> obj.monitor_R == 1
+    obj.errR            = errR;
+    obj.Rarr_record     = Rarr_record;
+    obj.Rarr2_record    = Rarr2_record;
+<span class="keyword">end</span>
+obj.reconstruction = rec;
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% RESIRE reconstruction
+
+%%inputs:
+%%  InputProjections - measured projections
+%%  Support - region of 1's and 0's defining where the reconstruction can exist 
+%%    (voxels that are 0 in support will be set to 0 in reconstruction)
+%%  sum_rot_pjs - the sum of constant terms for the gradient descent: sum(A^T(b)),
+%%      A is the back projection operator, b is measured projection
+%%  xj, yj, zj - different dimension for rotated coordinates with oversampling
+%%  Rot_x, Rot_y - x and y dimension for rotated coordinates without oversampling
+%%  step_size - the step size for gradient descent
+%%  dtype - the type of output results, set as 'single' to save the memory
+%%  monitor_R - the flag for recording real space error
+
+%%outputs:
+%%  reconstruction - reconstruction after iteration
+%%  errR - Real space error (averaged L1 norm between the measured projections and backprojections)
+%%  Rarr_record - recorded L1 norm error array for all projections
+%%  Rarr2_record - recorded L2 norm error array for all projections
+
+function obj = reconstruct(obj)
+projections = obj.InputProjections;
+Num_pj      = obj.NumProjs;
+step_size   = obj.step_size;
+dimx        = obj.Dim1;
+dimy        = obj.Dim2;
+dtype       = obj.dtype;
+Rot_x       = obj.Rot_x;
+Rot_y       = obj.Rot_y;
+iterations  = obj.numIterations;
+
+xj = double(obj.xj); yj = double(obj.yj); zj = double(obj.zj);
+
+sum_rot_pjs = obj.sum_rot_pjs; 
+
+rec = zeros(dimy,dimx,dimy,dtype);
+rec_big = zeros(obj.n2_oversampled,obj.n1_oversampled,obj.n2_oversampled,dtype);
+ind_V	= My_volumn_index(size(rec_big),size(rec));
+if obj.initial_model == 1
+    rec = obj.Support;
+    rec_big(ind_V(1,1):ind_V(1,2), ind_V(2,1):ind_V(2,2), ind_V(3,1):ind_V(3,2) ) = rec;
+end
+dt      = (step_size/Num_pj/dimx);
+
+fprintf('RESIRE: Reconstructing... \n\n');
+
+if obj.monitor_R == 1
+    monitorR_loopLength = obj.monitorR_loopLength;
+    errR_arr = zeros(1,floor(iterations./monitorR_loopLength));
+    Rarr_record = zeros(Num_pj,floor(iterations./monitorR_loopLength));
+    Rarr2_record = zeros(Num_pj,floor(iterations./monitorR_loopLength));
+end
+
+% flag for using parallel calculation
+if obj.use_parallel
+  parforArg = Inf;
+else
+  parforArg = 0;
+end
+
+for iter=1:iterations
+    recK  = double(my_fft(rec_big));    
+    
+    % compute rotated projections via Fourier Slice Theorem
+    pj_cal = splinterp3(recK, yj, xj, zj);
+    pj_cal = real(fftshift(ifft2(ifftshift(pj_cal))));
+    pj_cal = croppedOut(pj_cal, [dimx,dimy,Num_pj] );
+    
+    % compute R factor
+    if obj.monitor_R == 1 && mod(iter,monitorR_loopLength) == 0
+        Rarr = zeros(Num_pj,1);
+        Rarr2 = zeros(Num_pj,1);
+        for i=1:Num_pj
+            pj = projections(:,:,i); 
+            proj_i = pj_cal(:,:,i);
+            Rarr(i) = sum(sum( abs(proj_i - pj) ))/ sum(abs(pj(:)));
+            Rarr2(i) = norm( proj_i - pj, 'fro' )/ norm( pj, 'fro' );
+        end
+        errR  = mean(Rarr);
+        errR2 = mean(Rarr2);
+        fprintf('RESIRE: Iteration %d. Rfactor=%.4f, R2factor=%.4f \n',iter, errR, errR2);
+        errR_arr(iter./monitorR_loopLength) = errR;
+        Rarr_record(:,iter./monitorR_loopLength) = Rarr;
+        Rarr2_record(:,iter./monitorR_loopLength) = Rarr2;
+    else
+        fprintf('RESIRE: Iteration %d \n',iter);
+    end    
+    
+    % compute gradient & apply gradient descent
+    grad = -sum_rot_pjs;
+    parfor (k = 1:Num_pj,parforArg)
+%     for k = 1:Num_pj
+        rot_pj_cal  = splinterp2(pj_cal(:,:,k), double(Rot_y(:,:,:,k)), double(Rot_x(:,:,:,k)));
+        grad = grad + rot_pj_cal;
+    end
+    rec = rec - dt*grad;
+    rec = max(0,rec);
+    
+    % flag for saving temporary reconstruction
+    if obj.save_temp == 1 && mod(iter,obj.save_loopLength) == 0
+        temp_filename = [obj.saveFilename,num2str(iter),'.mat'];
+        save(temp_filename, 'rec');
+    end
+    
+    rec_big( ind_V(1,1):ind_V(1,2), ind_V(2,1):ind_V(2,2), ind_V(3,1):ind_V(3,2) ) = rec;
+end
+if obj.monitor_R == 1
+    obj.errR            = errR;
+    obj.Rarr_record     = Rarr_record;
+    obj.Rarr2_record    = Rarr2_record;
+end
+obj.reconstruction = rec;
+end
+##### SOURCE END #####
+--></body></html>

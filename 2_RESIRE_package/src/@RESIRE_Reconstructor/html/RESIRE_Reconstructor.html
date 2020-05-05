@@ -1,0 +1,398 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>RESIRE_Reconstructor</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-04-28"><meta name="DC.source" content="RESIRE_Reconstructor.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">classdef</span> RESIRE_Reconstructor
+
+    <span class="keyword">properties</span>
+        <span class="comment">% internal variables to be cleared after run</span>
+        InputProjections
+        InputAngles
+
+        <span class="comment">% internal variables to be kept after run</span>
+        reconstruction
+        errR
+        Dim1  <span class="comment">% projection size1</span>
+        Dim2  <span class="comment">% projection size2</span>
+        n1_oversampled  <span class="comment">% projection size1 after oversampling</span>
+        n2_oversampled  <span class="comment">% projection size2 after oversampling</span>
+        NumProjs
+        Rarr_record
+        Rarr2_record
+
+        <span class="comment">% R factor monitoring</span>
+        monitor_R = 0
+        monitorR_loopLength = 10
+
+        <span class="comment">% filenames</span>
+        filename_Projections = <span class="string">''</span>
+        filename_Angles = <span class="string">''</span>;
+        filename_Results = <span class="string">'./results/RESIRE_rec.mat'</span>;
+
+        <span class="comment">% reconstruction parameters</span>
+        numIterations = 50;
+        oversamplingRatio = 3;
+        griddingMethod = 1;
+
+        <span class="comment">% axes vectors for phi, theta, psi</span>
+        vector1 = [0 0 1];
+        vector2 = [0 1 0];
+        vector3 = [1 0 0];
+
+        <span class="comment">% save temp reconstruction</span>
+        save_temp = 0;
+        save_loopLength = 50;
+        saveFilename = <span class="string">'./results/temp_rec'</span>;
+
+        step_size = 2.;         <span class="comment">% normalized step_size is chosen in range (1,3)</span>
+        dtype  = <span class="string">'single'</span>;      <span class="comment">% data type, single for memory efficiency</span>
+        sum_rot_pjs;
+        use_parallel = 0;
+        xj; yj; zj;
+        Rot_x; Rot_y;
+        Support;
+        initial_model = 0;
+    <span class="keyword">end</span>
+
+    <span class="keyword">methods</span>
+
+        <span class="comment">% declare long methods in external files</span>
+        obj = reconstruct(obj)
+
+        <span class="comment">% declare short methods in this file</span>
+        <span class="keyword">function</span> obj = readFiles(obj)
+            <span class="keyword">if</span> FileExist(obj.filename_Projections)
+                obj.InputProjections = importdata(obj.filename_Projections);
+            <span class="keyword">else</span>
+                error(<span class="string">'RESIRE: Projections file does not exist!'</span>)
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> FileExist(obj.filename_Angles)
+                obj.InputAngles = importdata(obj.filename_Angles);
+            <span class="keyword">else</span>
+                error(<span class="string">'RESIRE: Angles file does not exist!'</span>)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+
+        <span class="keyword">function</span> obj = CheckPrepareData(obj)
+
+            <span class="comment">% set number of projections</span>
+            obj.NumProjs = size(obj.InputProjections,3);
+            obj.Dim1 = size(obj.InputProjections,1);
+            obj.Dim2 = size(obj.InputProjections,2);
+
+            <span class="comment">% input angle and projection size check</span>
+            <span class="keyword">if</span> obj.NumProjs~=size(obj.InputAngles,1)
+                error(<span class="string">'RESIRE: Number of projections and Angles does not match!'</span>)
+            <span class="keyword">end</span>
+
+            <span class="comment">% input angle check</span>
+            <span class="keyword">if</span> size(obj.InputAngles,2) &gt;3
+                error(<span class="string">'RESIRE: Input Angle 2nd dimenstions larger than three!'</span>)
+            <span class="keyword">end</span>
+
+            <span class="comment">% if only one angle set is given, make them three Euler angles</span>
+            <span class="keyword">if</span> size(obj.InputAngles,2) == 1
+                obj.InputAngles = [zeros(obj.NumProjs ,1); obj.InputAngles; zeros(obj.NumProjs ,1)];
+            <span class="keyword">end</span>
+
+            <span class="comment">% check if interp method is legitimate</span>
+            <span class="keyword">if</span> obj.griddingMethod ~= 1
+                error(<span class="string">'RESIRE: Unrecognized gridding method.'</span>)
+            <span class="keyword">end</span>
+
+            obj.n1_oversampled = round(obj.Dim1 * obj.oversamplingRatio);
+            obj.n2_oversampled = round(obj.Dim2 * obj.oversamplingRatio);
+
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj = runGridding(obj)
+            fprintf(<span class="string">'RESIRE: Interpolate real space projections...\n\n'</span>);
+            <span class="keyword">switch</span> obj.griddingMethod
+                <span class="keyword">case</span> 1
+                    obj = obj.interp_pj_realspace();
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+
+        <span class="comment">% clear big temporary arrays</span>
+        <span class="keyword">function</span> obj = ClearCalcVariables(obj)
+            obj.InputProjections = [];
+            obj.InputAngles      = [];
+            obj.sum_rot_pjs      = [];
+            obj.xj               = [];
+            obj.yj               = [];
+            obj.zj               = [];
+            obj.Rot_x            = [];
+            obj.Rot_y            = [];
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> SaveResults(obj)
+            save(obj.filename_Results, <span class="string">'obj'</span>)
+        <span class="keyword">end</span>
+        <span class="comment">% set parameters for RESIRE class</span>
+        <span class="keyword">function</span> obj=set_parameters(obj,varargin)
+            <span class="keyword">if</span> mod(length(varargin),2) ~= 0
+                error(<span class="string">'RESIRE: Additional argument list not divisible by 2. Options should be ''key'',''value'' pairs.'</span>)
+            <span class="keyword">end</span>
+            <span class="comment">% Apply user-provided options</span>
+            par_number = 1;
+            <span class="keyword">while</span> par_number &lt; length(varargin)
+                <span class="keyword">if</span> isprop(obj,varargin{par_number})
+                    obj.(varargin{par_number}) = varargin{par_number+1};
+                <span class="keyword">else</span>
+                    error(<span class="string">'RESIRE: Invalid option %s provided.'</span>,varargin{par_number})
+                <span class="keyword">end</span>
+                par_number = par_number + 2;
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">
+ans = 
+
+  RESIRE_Reconstructor - &#23646;&#24615;:
+
+        InputProjections: []
+             InputAngles: []
+          reconstruction: []
+                    errR: []
+                    Dim1: []
+                    Dim2: []
+          n1_oversampled: []
+          n2_oversampled: []
+                NumProjs: []
+             Rarr_record: []
+            Rarr2_record: []
+               monitor_R: 0
+     monitorR_loopLength: 10
+    filename_Projections: ''
+         filename_Angles: ''
+        filename_Results: './results/RESIRE_rec.mat'
+           numIterations: 50
+       oversamplingRatio: 3
+          griddingMethod: 1
+                 vector1: [0 0 1]
+                 vector2: [0 1 0]
+                 vector3: [1 0 0]
+               save_temp: 0
+         save_loopLength: 50
+            saveFilename: './results/temp_rec'
+               step_size: 2
+                   dtype: 'single'
+             sum_rot_pjs: []
+            use_parallel: 0
+                      xj: []
+                      yj: []
+                      zj: []
+                   Rot_x: []
+                   Rot_y: []
+                 Support: []
+           initial_model: 0
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+classdef RESIRE_Reconstructor
+    
+    properties
+        % internal variables to be cleared after run
+        InputProjections
+        InputAngles
+        
+        % internal variables to be kept after run
+        reconstruction
+        errR
+        Dim1  % projection size1
+        Dim2  % projection size2
+        n1_oversampled  % projection size1 after oversampling
+        n2_oversampled  % projection size2 after oversampling
+        NumProjs
+        Rarr_record
+        Rarr2_record
+        
+        % R factor monitoring
+        monitor_R = 0
+        monitorR_loopLength = 10
+        
+        % filenames
+        filename_Projections = ''
+        filename_Angles = '';
+        filename_Results = './results/RESIRE_rec.mat';
+        
+        % reconstruction parameters
+        numIterations = 50;
+        oversamplingRatio = 3;
+        griddingMethod = 1;
+        
+        % axes vectors for phi, theta, psi
+        vector1 = [0 0 1];
+        vector2 = [0 1 0];
+        vector3 = [1 0 0];
+        
+        % save temp reconstruction
+        save_temp = 0;
+        save_loopLength = 50;
+        saveFilename = './results/temp_rec';
+        
+        step_size = 2.;         % normalized step_size is chosen in range (1,3)
+        dtype  = 'single';      % data type, single for memory efficiency
+        sum_rot_pjs;
+        use_parallel = 0;
+        xj; yj; zj;
+        Rot_x; Rot_y;
+        Support;
+        initial_model = 0;
+    end
+    
+    methods
+        
+        % declare long methods in external files
+        obj = reconstruct(obj)
+        
+        % declare short methods in this file
+        function obj = readFiles(obj)
+            if FileExist(obj.filename_Projections)
+                obj.InputProjections = importdata(obj.filename_Projections);
+            else
+                error('RESIRE: Projections file does not exist!')
+            end
+            if FileExist(obj.filename_Angles)
+                obj.InputAngles = importdata(obj.filename_Angles);
+            else
+                error('RESIRE: Angles file does not exist!')
+            end
+        end
+        
+        function obj = CheckPrepareData(obj)
+            
+            % set number of projections
+            obj.NumProjs = size(obj.InputProjections,3);
+            obj.Dim1 = size(obj.InputProjections,1);
+            obj.Dim2 = size(obj.InputProjections,2);
+
+            % input angle and projection size check
+            if obj.NumProjs~=size(obj.InputAngles,1)
+                error('RESIRE: Number of projections and Angles does not match!')
+            end
+            
+            % input angle check
+            if size(obj.InputAngles,2) >3
+                error('RESIRE: Input Angle 2nd dimenstions larger than three!')
+            end
+            
+            % if only one angle set is given, make them three Euler angles
+            if size(obj.InputAngles,2) == 1
+                obj.InputAngles = [zeros(obj.NumProjs ,1); obj.InputAngles; zeros(obj.NumProjs ,1)];
+            end
+            
+            % check if interp method is legitimate
+            if obj.griddingMethod ~= 1
+                error('RESIRE: Unrecognized gridding method.')
+            end
+            
+            obj.n1_oversampled = round(obj.Dim1 * obj.oversamplingRatio);
+            obj.n2_oversampled = round(obj.Dim2 * obj.oversamplingRatio);
+            
+        end
+        function obj = runGridding(obj)
+            fprintf('RESIRE: Interpolate real space projections...\n\n');
+            switch obj.griddingMethod
+                case 1
+                    obj = obj.interp_pj_realspace();
+            end
+        end
+
+        % clear big temporary arrays
+        function obj = ClearCalcVariables(obj)
+            obj.InputProjections = [];
+            obj.InputAngles      = [];
+            obj.sum_rot_pjs      = [];
+            obj.xj               = [];
+            obj.yj               = [];
+            obj.zj               = [];
+            obj.Rot_x            = [];
+            obj.Rot_y            = [];
+        end
+        function SaveResults(obj)
+            save(obj.filename_Results, 'obj')
+        end
+        % set parameters for RESIRE class
+        function obj=set_parameters(obj,varargin)
+            if mod(length(varargin),2) ~= 0
+                error('RESIRE: Additional argument list not divisible by 2. Options should be ''key'',''value'' pairs.')
+            end
+            % Apply user-provided options
+            par_number = 1;
+            while par_number < length(varargin)
+                if isprop(obj,varargin{par_number})
+                    obj.(varargin{par_number}) = varargin{par_number+1};
+                else
+                    error('RESIRE: Invalid option %s provided.',varargin{par_number})
+                end
+                par_number = par_number + 2;
+            end
+        end
+    end
+end
+##### SOURCE END #####
+--></body></html>

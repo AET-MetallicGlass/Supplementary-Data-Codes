@@ -1,0 +1,271 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>interp_pj_realspace</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-04-28"><meta name="DC.source" content="interp_pj_realspace.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">interp_pj_realspace %%</a></li><li><a href="#2">InputProjections - measured projections</a></li><li><a href="#3">InputAngles - Euler angles in the form NumProjs x 3, where each projection has 3 angles in the form [phi;theta;psi]</a></li><li><a href="#4">interpolationCutoffDistance - radius of sphere in which to include measured</a></li><li><a href="#5">n1_oversampled, n2_oversampled - oversampling ratio for the projections in each direction</a></li><li><a href="#6">values when filling in grid.</a></li><li><a href="#7">vector1, vector2, vector3 -</a></li><li><a href="#8">dtype - the type of output results, set as 'single' to save the memory</a></li><li><a href="#9">sum_rot_pjs - the sum of constant terms for the gradient descent: sum(A^T(b)),</a></li><li><a href="#10">A is the back projection operator, b is measured projection</a></li><li><a href="#11">xj, yj, zj - different dimension for rotated coordinates with oversampling</a></li><li><a href="#12">Rot_x, Rot_y - x and y dimension for rotated coordinates without oversampling</a></li></ul></div><h2 id="1">interp_pj_realspace %%</h2><p>save temporary rotation information and constant term for gradient descent for higher speed reconstruction</p><pre class="codeinput"><span class="comment">%%inputs:</span>
+</pre><pre class="codeoutput error">&#38169;&#35823;&#20351;&#29992; evalin
+&#20989;&#25968;&#25110;&#21464;&#37327; 'interp_pj_realspace' &#26080;&#27861;&#35782;&#21035;&#12290;
+</pre><h2 id="2">InputProjections - measured projections</h2><h2 id="3">InputAngles - Euler angles in the form NumProjs x 3, where each projection has 3 angles in the form [phi;theta;psi]</h2><h2 id="4">interpolationCutoffDistance - radius of sphere in which to include measured</h2><h2 id="5">n1_oversampled, n2_oversampled - oversampling ratio for the projections in each direction</h2><h2 id="6">values when filling in grid.</h2><h2 id="7">vector1, vector2, vector3 -</h2><h2 id="8">dtype - the type of output results, set as 'single' to save the memory</h2><pre class="codeinput"><span class="comment">%%outputs:</span>
+</pre><h2 id="9">sum_rot_pjs - the sum of constant terms for the gradient descent: sum(A^T(b)),</h2><h2 id="10">A is the back projection operator, b is measured projection</h2><h2 id="11">xj, yj, zj - different dimension for rotated coordinates with oversampling</h2><h2 id="12">Rot_x, Rot_y - x and y dimension for rotated coordinates without oversampling</h2><pre class="codeinput"><span class="keyword">function</span> obj = interp_pj_realspace(obj)
+tic
+projections  = obj.InputProjections;
+projections  = double(projections);
+Num_pj       = obj.NumProjs;
+dimx         = obj.Dim1;
+dimy         = obj.Dim2;
+
+phiangles    = obj.InputAngles(:,1);
+thetaangles  = obj.InputAngles(:,2);
+psiangles    = obj.InputAngles(:,3);
+
+vec1         = obj.vector1;
+vec2         = obj.vector2;
+vec3         = obj.vector3;
+
+dtype        = obj.dtype;
+n1_oversampled = obj.n1_oversampled;
+n2_oversampled = obj.n2_oversampled;
+
+ncy = round((dimy+1)/2);
+ncx = round((dimx+1)/2);
+
+<span class="comment">% calculate grid points for rotation</span>
+k1 = cast((-1*ceil((dimx-1)/2):1:floor((dimx-1)/2)),dtype );
+k2 = cast((-1*ceil((dimy-1)/2):1:floor((dimy-1)/2)),dtype );
+k3 = k1;
+[YY,XX,ZZ] = meshgrid(k1,k2,k3);
+XX = XX(:)'; YY = YY(:)'; ZZ = ZZ(:)';
+
+rot_pjs = zeros(dimy,dimx,dimx,Num_pj,dtype);
+
+<span class="comment">% calculate oversampled grid points for calculating back projections</span>
+ncy_big = round((n2_oversampled+1)/2);
+ncx_big = round((n1_oversampled+1)/2);
+[Y, X, Z] = meshgrid((1:n2_oversampled) - ncy_big, (1:n1_oversampled) - ncx_big, 0);
+Y = Y(:)'; X = X(:)'; Z = Z(:)';
+xj = zeros(n2_oversampled,n1_oversampled,Num_pj);
+yj = zeros(n2_oversampled,n1_oversampled,Num_pj);
+zj = zeros(n2_oversampled,n1_oversampled,Num_pj);
+
+Rot_x = zeros(dimy, dimx, dimy, Num_pj, dtype);
+Rot_y = zeros(dimy, dimx, dimy, Num_pj, dtype);
+
+<span class="keyword">if</span> obj.use_parallel
+  parforArg = Inf;
+<span class="keyword">else</span>
+  parforArg = 0;
+<span class="keyword">end</span>
+
+<span class="keyword">parfor</span> (k = 1:Num_pj, parforArg)
+<span class="comment">% for k = 1:Num_pj</span>
+    phi   = phiangles(k);
+    theta = thetaangles(k);
+    psi   = psiangles(k);
+    pj    = projections(:,:,k);
+
+    R1 = MatrixQuaternionRot(vec1,phi);
+    R2 = MatrixQuaternionRot(vec2,theta);
+    R3 = MatrixQuaternionRot(vec3,psi);
+    R = (R1*R2*R3)';
+
+    rotCoords = R(1:2,:)*[XX; YY; ZZ];
+    rot_x  = double(rotCoords(1,:));
+    rot_y  = double(rotCoords(2,:));
+    rot_x = reshape(rot_x, [dimy dimx dimy])+ncx;
+    rot_y = reshape(rot_y, [dimy dimx dimy])+ncy;
+    Rot_x(:,:,:,k) = rot_x;
+    Rot_y(:,:,:,k) = rot_y;
+    rot_pj = splinterp2(pj, rot_y, rot_x);
+    rot_pjs(:,:,:,k) = rot_pj;
+
+    rotCoords = R'*[X; Y; Z];
+    xj(:,:,k) = reshape((rotCoords(1,:)),[n2_oversampled,n1_oversampled])+ncy_big;
+    yj(:,:,k) = reshape((rotCoords(2,:)),[n2_oversampled,n1_oversampled])+ncy_big;
+    zj(:,:,k) = reshape((rotCoords(3,:)),[n2_oversampled,n1_oversampled])+ncy_big;
+<span class="keyword">end</span>
+sum_rot_pjs = sum(rot_pjs,4);
+
+obj.sum_rot_pjs = sum_rot_pjs;
+obj.xj = xj; obj.yj = yj; obj.zj = zj;
+obj.Rot_x = Rot_x; obj.Rot_y = Rot_y;
+
+timeTakenToInterp = toc;
+timeTakenToInterp = round(10*timeTakenToInterp)./10;
+fprintf(<span class="string">'RESIRE: projections interpolated in %.12g seconds.\n\n'</span>,timeTakenToInterp);
+
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%%  interp_pj_realspace %%
+% save temporary rotation information and constant term for gradient
+% descent for higher speed reconstruction
+
+%%inputs:
+%%  InputProjections - measured projections
+%%  InputAngles - Euler angles in the form NumProjs x 3, where each projection has 3 angles in the form [phi;theta;psi]
+%%  interpolationCutoffDistance - radius of sphere in which to include measured
+%%  n1_oversampled, n2_oversampled - oversampling ratio for the projections in each direction
+%%      values when filling in grid.
+%%  vector1, vector2, vector3 - 
+%%  dtype - the type of output results, set as 'single' to save the memory
+
+%%outputs:
+%%  sum_rot_pjs - the sum of constant terms for the gradient descent: sum(A^T(b)),
+%%      A is the back projection operator, b is measured projection
+%%  xj, yj, zj - different dimension for rotated coordinates with oversampling
+%%  Rot_x, Rot_y - x and y dimension for rotated coordinates without oversampling
+
+function obj = interp_pj_realspace(obj)
+tic
+projections  = obj.InputProjections;
+projections  = double(projections);
+Num_pj       = obj.NumProjs;
+dimx         = obj.Dim1;
+dimy         = obj.Dim2;
+
+phiangles    = obj.InputAngles(:,1);
+thetaangles  = obj.InputAngles(:,2);
+psiangles    = obj.InputAngles(:,3);
+
+vec1         = obj.vector1;
+vec2         = obj.vector2;
+vec3         = obj.vector3;
+
+dtype        = obj.dtype;
+n1_oversampled = obj.n1_oversampled;
+n2_oversampled = obj.n2_oversampled;
+
+ncy = round((dimy+1)/2); 
+ncx = round((dimx+1)/2); 
+
+% calculate grid points for rotation
+k1 = cast((-1*ceil((dimx-1)/2):1:floor((dimx-1)/2)),dtype );
+k2 = cast((-1*ceil((dimy-1)/2):1:floor((dimy-1)/2)),dtype );
+k3 = k1;
+[YY,XX,ZZ] = meshgrid(k1,k2,k3);
+XX = XX(:)'; YY = YY(:)'; ZZ = ZZ(:)';
+
+rot_pjs = zeros(dimy,dimx,dimx,Num_pj,dtype);
+
+% calculate oversampled grid points for calculating back projections
+ncy_big = round((n2_oversampled+1)/2); 
+ncx_big = round((n1_oversampled+1)/2); 
+[Y, X, Z] = meshgrid((1:n2_oversampled) - ncy_big, (1:n1_oversampled) - ncx_big, 0);
+Y = Y(:)'; X = X(:)'; Z = Z(:)';
+xj = zeros(n2_oversampled,n1_oversampled,Num_pj);
+yj = zeros(n2_oversampled,n1_oversampled,Num_pj);
+zj = zeros(n2_oversampled,n1_oversampled,Num_pj);
+
+Rot_x = zeros(dimy, dimx, dimy, Num_pj, dtype);
+Rot_y = zeros(dimy, dimx, dimy, Num_pj, dtype);
+
+if obj.use_parallel
+  parforArg = Inf;
+else
+  parforArg = 0;
+end
+
+parfor (k = 1:Num_pj, parforArg)
+% for k = 1:Num_pj
+    phi   = phiangles(k);
+    theta = thetaangles(k);
+    psi   = psiangles(k);
+    pj    = projections(:,:,k);    
+    
+    R1 = MatrixQuaternionRot(vec1,phi);
+    R2 = MatrixQuaternionRot(vec2,theta);
+    R3 = MatrixQuaternionRot(vec3,psi);
+    R = (R1*R2*R3)';
+    
+    rotCoords = R(1:2,:)*[XX; YY; ZZ];
+    rot_x  = double(rotCoords(1,:));
+    rot_y  = double(rotCoords(2,:));
+    rot_x = reshape(rot_x, [dimy dimx dimy])+ncx;
+    rot_y = reshape(rot_y, [dimy dimx dimy])+ncy;
+    Rot_x(:,:,:,k) = rot_x;
+    Rot_y(:,:,:,k) = rot_y;
+    rot_pj = splinterp2(pj, rot_y, rot_x);    
+    rot_pjs(:,:,:,k) = rot_pj;        
+    
+    rotCoords = R'*[X; Y; Z];
+    xj(:,:,k) = reshape((rotCoords(1,:)),[n2_oversampled,n1_oversampled])+ncy_big;
+    yj(:,:,k) = reshape((rotCoords(2,:)),[n2_oversampled,n1_oversampled])+ncy_big;
+    zj(:,:,k) = reshape((rotCoords(3,:)),[n2_oversampled,n1_oversampled])+ncy_big;
+end
+sum_rot_pjs = sum(rot_pjs,4);
+
+obj.sum_rot_pjs = sum_rot_pjs;
+obj.xj = xj; obj.yj = yj; obj.zj = zj;
+obj.Rot_x = Rot_x; obj.Rot_y = Rot_y;
+
+timeTakenToInterp = toc;
+timeTakenToInterp = round(10*timeTakenToInterp)./10;
+fprintf('RESIRE: projections interpolated in %.12g seconds.\n\n',timeTakenToInterp);
+
+end
+##### SOURCE END #####
+--></body></html>
