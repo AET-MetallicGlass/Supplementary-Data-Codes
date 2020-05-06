@@ -8,7 +8,7 @@ Coherent Imaging Group, UCLA
 
 - [Overview](#overview)
 - [System Requirements](#system-requirements)
-- [Repo Contents](#repo-contents)
+- [Repositary Contents](#repositary-contents)
 
 # Overview
 
@@ -37,7 +37,7 @@ Mac OSX: We have not tested it on a Mac yet, but it should in principle work.
 
 This package has been tested with `Matlab` R2019b. All the codes have to run in their own folders. We recommend the use of `Matlab` version R2018a or higher to test the data and source codes.
 
-# Repo Contents
+# Repositary Contents
 
 ### 1. Experiment Data
 
