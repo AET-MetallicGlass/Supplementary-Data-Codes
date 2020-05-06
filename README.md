@@ -1,6 +1,6 @@
-# MetallicGlass-Package
+# Supplementary Data Codes 
 
-Determining the three-dimensional atomic structure of an amorphous solid
+**Determining the three-dimensional atomic structure of an amorphous solid**
 
 Coherent Imaging Group, UCLA
 
@@ -13,15 +13,13 @@ Coherent Imaging Group, UCLA
 # Overview
 
 Amorphous solids such as glass are ubiquitous in our daily life and have found broad applications ranging from window glass and solar cells to telecommunications and transformer cores. However, due to the lack of long-range order, the three dimensional (3D) atomic structure of amorphous solids have thus far defied any direct experimental determination. Here, using a multi-component metallic glass
-as a model, we advance atomic electron tomography technique with newly developed RESIRE (REal Space Iterative Algorithm) package to determine its 3D atomicpositions and chemical species with a precision of 21 picometer. We quantify the short-range order (SRO) and medium-range order (MRO) of the 3D atomicarrangement, as well as the size, shape,
-volume, and structural distortion of these MROs with unprecedented detail.
+as a model, we advanced atomic electron tomography to determine the 3D atomic positions and chemical species in an amorphous solid with a precision of 21 picometer. We quantified the short-range order (SRO) and medium-range order (MRO) of the 3D atomic arrangement and measured the size, shape, volume, and structural distortion of the MROs. The experimental data and source codes for the 3D image reconstruction and post analysis are provided here.
 
 # System Requirements
 
 ## Hardware Requirements
 
-Most of the AET processing codes require only a standard computer with enough RAM to support the operations defined by a user. For minimal performance, this will be a computer with about 2 GB of RAM. For optimal performance, we recommend a computer with 16G DRAM, standard i7 4-core CPU, and a GPU, which could support running of `RESIRE` package on a projection set with less than 100 pixel size.
-Users could check the code `Main_RESIRE_sample.m` in folder `2_RESIRE_package`.
+We recommend a computer with 16G DRAM, standard i7 4-core CPU, and a GPU to run most data analysis source codes. But for the 3D reconstruction of the experimental data with RESIRE, atomic tracing and the determination of the MROs, we recommend a computer with large memory (256G DRAM, 16-core CPU and 1 GPU).
 
 When the matrix size is larger than 100^3 (such as 320^3 for the experimental data here). It is better to use super computer with larger memory (Testing environment: 256G DRAM, 16-core CPU, 1 GPU).
 
@@ -29,62 +27,62 @@ When the matrix size is larger than 100^3 (such as 320^3 for the experimental da
 
 ### OS Requirements
 
-The package development version is tested on Linux operating systems. The developmental version of the package has been tested on the following systems:
+This package has been tested on the following Operating System:
 
 Linux: CentOS 6 2.6.32   
-Mac OSX:   
-Windows: Windows 10 18368.778   
+Windows: Windows 10 18368.778 
+Mac OSX: We have not tested it on a Mac yet, but it should in principle work.    
 
 ### Matlab Version Requirements
 
-The package is tested with `Matlab` R2019b. For correctly using of this package, we suggest `Matlab` version R2018a or higher.
+This package has been tested with `Matlab` R2019b. All the codes have to run in their own folders. We recommend the use of `Matlab` version R2018a or higher to test the data and source codes.
 
 # Repo Contents
 
-### 1. Input Experiment Data
+### 1. Experiment Data
 
 Folder: [1_Measured_data](./1_Measured_data)
 
-Denoised and aligned experimental projections by applying the Block-Matching and 3D filtering (BM3D) algorithm for the Metallic Glass sample. Please visit [BM3D package](http://www.cs.tut.fi/~foi/GCF-BM3D/) for more details.
+This folder contains 51 experimental projections after denoising and alignment as well as their corresponding angles.
 
-### 2. RESIRE Package
+### 2. The REal Space Iterative REconstruction (RESIRE) Package
 
 Folder: [2_RESIRE_package](./2_RESIRE_package)
 
-The Real Space Iterative Reconstruction (RESIRE) algorithm package. Run the sample code `Main_RESIRE_sample.m` to see the reconstruction from smaller size sample. Run the main code `Main_RESIRE_MG.m` to get the reconstruction of Metallic Glass nanoparticle.
+Run the sample code Main_RESIRE_sample.m to get the 3D reconstruction of a smaller test object. Run the main code `Main_RESIRE_MG.m` to obtain the 3D reconstruction of the metallic glass sample.
 
-### 3. Output Experiment Reconstruction Volume
+### 3. Reconstructed 3D Volume
 
 Folder: [3_Final_reconstruction_volume](./3_Final_reconstruction_volume)
 
-The Final reconstruction volume of the Metallic Glass nanoparticle achieved from Main_RESIRE_MG.m.
+This folder contains the 3D volume of the metallic glass sample reconstructed from `Main_RESIRE_MG.m`.
 
-### 4. Tracing and Classification
+### 4. Atom Tracing and Classification
 
 Folder: [4_Tracing_and_classification](./4_Tracing_and_classification)
 
-Run the main code `Main_polynomial_tracing.m` to get the initial tracing results from the reconstruction volume. After manually check the peak position, run the main code `Main_classification.m` to get the atomic species results of the Metallic Glass nanoparticle.
+Run the code `Main_polynomial_tracing.m` to trace the initial atomic positions from the reconstructed 3D volume. After the manual checking of the 3D atomic positions, run the code Main_classification.m to classify the eight elements in the sample into three different types: Co and Ni as type 1, Ru, Rh, Pd and Ag as type 2, and Ir and Pt as type 3.
 
-### 5. Position Refinement
+### 5. Atomic Position Refinement
 
 Folder: [5_Position_refinement](./5_Position_refinement)
 
-Run the main code `Main_position_refinement.m` to get the finalized atomic position of Metallic Glass nanoparticle.
+Run the code `Main_position_refinement.m` to refine the 3D atomic coordinates in the metallic glass sample.
 
-### 6. Output Experimental Atomic Model
+### 6. Experimental Atomic Model
 
 Folder: [6_Final_coordinates](./6_Final_coordinates)
 
-The Final atomic model and species of the Metallic Glass nanoparticle.
+The final 3D atomic model and chemical species (i.e. type 1, 2 and 3) of the metallic glass sample.
 
 ### 7. Post Data Analysis —— Short Range Order
 
 Folder: [7_Data_analysis_sro](./7_Data_analysis_sro)
 
-Run the code `Main_1_rdf_and_boo_calculation_all_atoms.m` to get the Radial Distribution Function (RDF) and Bond Orientation Order (BOO) for all atoms in the Metallic Glass nanoparticle; Run the code `Main_2_rdf_calculation_amorphous_region.m` to get the Radial Distribution Function (RDF) and Pair Distribution Function (PDF) for amorphous atoms in the Metallic Glass nanoparticle; Run the code `Main_3_voronoi_calculation_amorphous_region.m` to get the Voronoi index for all atoms in the Metallic Glass nanoparticle.
+Run the code `Main_1_rdf_and_boo_calculation_all_atoms.m` to calculate the radial distribution function and the bond orientation order parameter for all the atoms in the metallic glass sample; Run the code `Main_2_rdf_calculation_amorphous_region.m` to compute the radial distribution function and pair distribution function for all the amorphous atoms in the sample; Run the code `Main_3_voronoi_calculation_amorphous_region.m` to determine the Voronoi indices for all the atoms in the sample.
 
 ### 8. Post Data Analysis —— Medium Range Order
 
 Folder: [8_Data_analysis_mro](./8_Data_analysis_mro)
 
-Run the code `Main_1_potential_mro.m` to calculate the potential Medium Range Order (MRO) networks based on breadth first search algorithm; Run the code `Main_2_final_mro.m` to get the final MRO networks to fill in the whole nanoparticle.
+Run the code `Main_1_potential_mro.m` to identify the possible MROs based on the breadth first search algorithm; Run the code `Main_2_final_mro.m` to determine the final MROs in the metallic glass sample.
