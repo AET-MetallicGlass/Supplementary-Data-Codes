@@ -21,8 +21,6 @@ as a model, we advanced atomic electron tomography to determine the 3D atomic po
 
 We recommend a computer with 16G DRAM, standard i7 4-core CPU, and a GPU to run most data analysis source codes. But for the 3D reconstruction of the experimental data with RESIRE, atomic tracing and the determination of the MROs, we recommend a computer with large memory (256G DRAM, 16-core CPU and 1 GPU).
 
-When the matrix size is larger than 100^3 (such as 320^3 for the experimental data here). It is better to use super computer with larger memory (Testing environment: 256G DRAM, 16-core CPU, 1 GPU).
-
 ## Software Requirements
 
 ### OS Requirements
