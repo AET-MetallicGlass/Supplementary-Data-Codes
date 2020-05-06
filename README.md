@@ -29,9 +29,9 @@ When the matrix size is larger than 100^3 (such as 320^3 for the experimental da
 
 This package has been tested on the following Operating System:
 
-Linux: CentOS 6 2.6.32   
-Windows: Windows 10 18368.778 
-Mac OSX: We have not tested it on a Mac yet, but it should in principle work.    
+Linux: CentOS 6 2.6.32    
+Windows: Windows 10 18368.778    
+Mac OSX: We have not tested it on a Mac yet, but it should in principle work.     
 
 ### Matlab Version Requirements
 
