@@ -4,7 +4,7 @@
 
 Yao Yang<sup>1*</sup>, Jihan Zhou<sup>1*</sup>, Fan Zhu<sup>1*</sup>, Dillan Chang<sup>1</sup>, Dennis S. Kim<sup>1</sup>, Yakun Yuan<sup>1</sup>, Minh Pham<sup>2</sup>, Arjun Rana<sup>1</sup>, Xuezeng Tian<sup>1</sup>, Yonggang Yao<sup>3</sup>, Stanley Osher<sup>2</sup>, Liangbing Hu<sup>3</sup>, Peter Ercius<sup>4</sup> & Jianwei Miao<sup>1†</sup>    
 
-<font size="-2">*<sup>1</sup>Department of Physics & Astronomy and California NanoSystems Institute, University of California, Los Angeles, CA 90095, USA.*</font>     
+*<font size="-2"><sup>1</sup>Department of Physics & Astronomy and California NanoSystems Institute, University of California, Los Angeles, CA 90095, USA.</font>*    
 <font size="-2">*<sup>2</sup>Department of Mathematics, University of California, Los Angeles, CA 90095, USA.*</font>     
 <font size="-2">*<sup>3</sup>Department of Materials Science and Engineering, University of Maryland, College Park, Maryland, 20742, USA.*</font>     
 <font size="-2">*<sup>4</sup>National Center for Electron Microscopy, Molecular Foundry, Lawrence Berkeley National Laboratory, Berkeley, CA 94720, USA.*</font>    
