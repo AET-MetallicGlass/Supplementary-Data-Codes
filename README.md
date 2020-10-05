@@ -49,7 +49,7 @@ This package has been tested with `Matlab` R2019b. All the codes have to run in 
 
 Folder: [Measured_data](./1_Measured_data)
 
-This folder contains 51 experimental projections after denoising and alignment as well as their corresponding angles.
+This folder contains 55 experimental projections after denoising and alignment as well as their corresponding angles.
 
 ### 2. The REal Space Iterative REconstruction (RESIRE) Package
 
@@ -92,3 +92,9 @@ Run the code `Main_1_rdf_and_boo_calculation_all_atoms.m` to calculate the radia
 Folder: [Data_analysis_mro](./8_Data_analysis_mro)
 
 Run the code `Main_1_potential_mro.m` to identify the possible MROs based on the breadth first search algorithm; Run the code `Main_2_final_mro.m` to determine the final MROs in the metallic glass sample.
+
+### 9. Supplementary Figures
+
+Folder: [Supplementary Figures](./9_Supplementary Figures)
+
+This file contains four Supplementary Figures.
