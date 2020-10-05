@@ -1,8 +1,8 @@
 # Supplementary Data Codes 
 
-**Determining the three-dimensional atomic structure of an amorphous solid**
+**Determining the three-dimensional atomic structure of a metallic glass**
 
-Yao Yang<sup>1*</sup>, Jihan Zhou<sup>1*</sup>, Fan Zhu<sup>1*</sup>, Dillan Chang<sup>1</sup>, Dennis S. Kim<sup>1</sup>, Yakun Yuan<sup>1</sup>, Minh Pham<sup>2</sup>, Arjun Rana<sup>1</sup>, Xuezeng Tian<sup>1</sup>, Yonggang Yao<sup>3</sup>, Stanley Osher<sup>2</sup>, Liangbing Hu<sup>3</sup>, Peter Ercius<sup>4</sup> & Jianwei Miao<sup>1†</sup>    
+Yao Yang<sup>1*</sup>, Jihan Zhou<sup>1*</sup>, Fan Zhu<sup>1*</sup>, Yakun Yuan<sup>1*</sup>, Dillan Chang<sup>1</sup>, Dennis S. Kim<sup>1</sup>, Minh Pham<sup>2</sup>, Arjun Rana<sup>1</sup>, Xuezeng Tian<sup>1</sup>, Yonggang Yao<sup>3</sup>, Stanley Osher<sup>2</sup>, Andreas K. Schmid<sup>4</sup>, Liangbing Hu<sup>3</sup>, Peter Ercius<sup>4</sup> & Jianwei Miao<sup>1†</sup>    
 
 *<sup>1</sup>Department of Physics & Astronomy and California NanoSystems Institute, University of California, Los Angeles, CA 90095, USA.*    
 *<sup>2</sup>Department of Mathematics, University of California, Los Angeles, CA 90095, USA.*     
@@ -47,48 +47,48 @@ This package has been tested with `Matlab` R2019b. All the codes have to run in 
 
 ### 1. Experiment Data
 
-Folder: [1_Measured_data](./1_Measured_data)
+Folder: [Measured_data](./1_Measured_data)
 
 This folder contains 51 experimental projections after denoising and alignment as well as their corresponding angles.
 
 ### 2. The REal Space Iterative REconstruction (RESIRE) Package
 
-Folder: [2_RESIRE_package](./2_RESIRE_package)
+Folder: [RESIRE_package](./2_RESIRE_package)
 
 Run the sample code Main_RESIRE_sample.m to get the 3D reconstruction of a smaller test object. Run the main code `Main_RESIRE_MG.m` to obtain the 3D reconstruction of the metallic glass sample.
 
 ### 3. Reconstructed 3D Volume
 
-Folder: [3_Final_reconstruction_volume](./3_Final_reconstruction_volume)
+Folder: [Final_reconstruction_volume](./3_Final_reconstruction_volume)
 
 This folder contains the 3D volume of the metallic glass sample reconstructed from `Main_RESIRE_MG.m`.
 
 ### 4. Atom Tracing and Classification
 
-Folder: [4_Tracing_and_classification](./4_Tracing_and_classification)
+Folder: [Tracing_and_classification](./4_Tracing_and_classification)
 
 Run the code `Main_polynomial_tracing.m` to trace the initial atomic positions from the reconstructed 3D volume. After the manual checking of the 3D atomic positions, run the code Main_classification.m to classify the eight elements in the sample into three different types: Co and Ni as type 1, Ru, Rh, Pd and Ag as type 2, and Ir and Pt as type 3.
 
 ### 5. Atomic Position Refinement
 
-Folder: [5_Position_refinement](./5_Position_refinement)
+Folder: [Position_refinement](./5_Position_refinement)
 
 Run the code `Main_position_refinement.m` to refine the 3D atomic coordinates in the metallic glass sample.
 
 ### 6. Experimental Atomic Model
 
-Folder: [6_Final_coordinates](./6_Final_coordinates)
+Folder: [Final_coordinates](./6_Final_coordinates)
 
 The final 3D atomic model and chemical species (i.e. type 1, 2 and 3) of the metallic glass sample.
 
 ### 7. Post Data Analysis —— Short Range Order
 
-Folder: [7_Data_analysis_sro](./7_Data_analysis_sro)
+Folder: [Data_analysis_sro](./7_Data_analysis_sro)
 
 Run the code `Main_1_rdf_and_boo_calculation_all_atoms.m` to calculate the radial distribution function and the bond orientation order parameter for all the atoms in the metallic glass sample; Run the code `Main_2_rdf_calculation_amorphous_region.m` to compute the radial distribution function and pair distribution function for all the amorphous atoms in the sample; Run the code `Main_3_voronoi_calculation_amorphous_region.m` to determine the Voronoi indices for all the atoms in the sample.
 
 ### 8. Post Data Analysis —— Medium Range Order
 
-Folder: [8_Data_analysis_mro](./8_Data_analysis_mro)
+Folder: [Data_analysis_mro](./8_Data_analysis_mro)
 
 Run the code `Main_1_potential_mro.m` to identify the possible MROs based on the breadth first search algorithm; Run the code `Main_2_final_mro.m` to determine the final MROs in the metallic glass sample.
