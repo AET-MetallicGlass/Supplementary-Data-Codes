@@ -10,6 +10,7 @@ addpath('input/')
 model = importdata('final_atom_coord_inA.mat');
 atoms = importdata('final_atom_types.mat');
 scaled_boo_amor = importdata('scaled_boo_amorphous_region.mat');
+model = double(model);
 
 % calculate the amorphous atoms and their types
 cc = scaled_boo_amor < 0.5;

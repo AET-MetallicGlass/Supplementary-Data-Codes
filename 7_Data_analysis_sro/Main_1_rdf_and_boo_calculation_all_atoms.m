@@ -8,6 +8,7 @@ addpath('input/')
 % read in files: finalized atomic coordinates in Angstrom and types
 model = importdata('final_atom_coord_inA.mat');
 atoms = importdata('final_atom_types.mat');
+model = double(model);
 
 % set the parameters: step size and the range for rdf and pdf
 step = 0.1;  cutoff = 20;

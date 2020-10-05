@@ -147,3 +147,4 @@ for i=1:size(maxXYZ,1)
     end
     fprintf(1,'peak %d, flag %d \n',i,exitFlagArr(i));
 end
+

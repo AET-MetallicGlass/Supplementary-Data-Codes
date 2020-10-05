@@ -73,3 +73,5 @@ classify_info.Radius = 10/0.347*3; % radius is 10A
 % please see the descriptions in subfunction to get more details
 [peak_info_local_classfication,~] = plot_class_hist(...
     FinalVol_single, atom_model, local_class_atomtype, classify_info);
+
+save('output/localC_res.mat','local_atomtype');

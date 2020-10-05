@@ -135,3 +135,5 @@ while true
     count = count + 1;
 end
 num_arr_arr = cellfun(@numel,network_arr);
+
+save('mro_list_amorphous_region_075.mat','network_arr','network_grid','network_ind','network_type','num_arr_arr');

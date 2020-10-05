@@ -79,4 +79,4 @@ for jjjj=1:10
 
 end
 model_refined_res = model_refined;
-save('output/result.mat','model_refined_res');
+save('output/model_refined_res.mat','model_refined_res');
