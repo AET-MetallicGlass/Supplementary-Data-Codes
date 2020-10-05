@@ -95,6 +95,6 @@ Run the code `Main_1_potential_mro.m` to identify the possible MROs based on the
 
 ### 9. Supplementary Figures
 
-Folder: [Supplementary Figures](./9_Supplementary Figures)
+Folder: [Supplementary_Figures](./9_Supplementary_figures)
 
 This file contains four Supplementary Figures.
