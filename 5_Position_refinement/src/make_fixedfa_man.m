@@ -1,5 +1,5 @@
-function fixedfa =  make_fixedfa_man(sizeXY, Res, Z_arr)
-    finalvol_summed = zeros(sizeXY);
+function fixedfa =  make_fixedfa_man(sizeX, Res, Z_arr)
+    finalvol_summed = zeros(sizeX);
 
     kx = 1:size(finalvol_summed,1);
     ky = 1:size(finalvol_summed,2);

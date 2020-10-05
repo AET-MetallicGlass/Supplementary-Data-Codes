@@ -6,14 +6,13 @@ addpath('input/')
 
 % read in files: finalized atomic coordinates in Angstrom and types, as
 model = importdata('final_atom_coord_inA.mat');
-model = model';
+model = double(model');
 
 % set parameters: the cutoff area for the voronoi calculation to be 1% to
 % reduce the thermal expansion effect
 areacutoff = 0.01;
-% the bondlength cutoff is achieved by gaussian fitting from the 1st valley
-% of rdf curve of amorphous atoms in the nanoparticle
-bondlengthcutoff = 3.78;
+% no bondlength cutoff is enforced
+bondlengthcutoff = 1e5;
 
 % perform the voronoi calcualtion
 [V,R] = voronoin(model);
@@ -208,3 +207,32 @@ for tid = 1:size(model,1)
         VoronoiID{end+1} = [tid];
     end
 end
+%% plot voronoi
+% plot stat of all voronoi index
+% figures in paper shows only voronoi index of amorphous part atoms
+[Nindlistsort,ind]=sort(Nindlist,'descend');
+tot=sum(Nindlistsort);
+top10=indlist(ind(1:10),3:end);
+Ntop10=Nindlistsort(1:10)/tot;
+
+topOrder=sum(top10,2)*1e5+top10*([1e4 1e3 1e2 1e1]');
+[~,ind]=sort(topOrder,'ascend');
+
+figure();clf; bar(Ntop10(ind))
+ylabel('Fraction')
+temp=['<'*ones(10,1) num2str(top10(ind,:)) '>'*ones(10,1)];
+label=cell(10,1);
+for i=1:10
+    label{i}=temp(i,:);
+end
+
+label = cellfun(@(x) strrep(x,'  ',','), label,'UniformOutput',false);
+set(gca,'xticklabel',label)
+xtickangle(45)
+disp('Top 10 most populated indices')
+
+temp=indlist.*Nindlist';
+figure(2);clf % every face has same weight
+bar(sum(temp(:,3:6),1)/sum(temp(:)))
+ylabel('Fraction')
+

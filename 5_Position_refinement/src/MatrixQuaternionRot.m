@@ -1,6 +1,3 @@
-%%  MatrixQuaternionRot %%
-% changee euler angle to rotation matrix by quaternion 
-
 function dd = MatrixQuaternionRot(vector,theta)
 
 theta = theta*pi/180;
@@ -12,5 +9,4 @@ RotM = [1-2*y^2-2*z^2 2*x*y+2*w*z 2*x*z-2*w*y;
       2*x*z+2*w*y 2*y*z-2*w*x 1-2*x^2-2*y^2;];
 
 dd = RotM;
-
 end

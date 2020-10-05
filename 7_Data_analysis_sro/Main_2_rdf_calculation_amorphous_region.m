@@ -17,7 +17,7 @@ model = model(:,cc);
 atoms = atoms(:,cc);
 
 % set the parameters: step size and the range for rdf and pdf
-res = 1;  step = 0.1;  cutoff = 30;
+res = 1;  step = 0.05;  cutoff = 20;
 
 % calculate the alpha shape of the nanoparticle
 submodel = model - repmat(min(model,[],2),[1,size(model,2)]) + ones(size(model));
@@ -73,3 +73,21 @@ for i=1:size(submodel,2)
     volume_arr = volume_arr + volume_arr_temp;
     
 end
+% plot rdf as following code
+shp = alphaShape(model(1,:)',model(2,:)',model(3,:)',ceil(4));
+volume_alpha = volume(shp) + 4*pi()*90^2*0.1;
+rdf_arr(1) = 0;
+rdfnorm_arr= rdf_arr(:)./size(model,2)./(volume_arr(:)./volume_alpha);
+radius_arr = radius_arr + 0.025;
+rdf_amor05 = rdfnorm_arr;
+
+rdf_amor05(1) = 0;
+rdf_amor05(end) = rdf_amor05(end-1);
+rdf_amor05 = imgaussfilt(rdf_amor05,2);
+[base_g_sub1,ycorr_g_sub1] = baseline_normal(rdf_amor05);
+rdf_amor05 = ycorr_g_sub1 + base_g_sub1/base_g_sub1(end);
+
+figure(21); set(gcf,'position',[0,50,1000,600]); 
+clf; hold on;
+plot(r_dist_arr,rdf_amor05,'LineWidth',2);
+

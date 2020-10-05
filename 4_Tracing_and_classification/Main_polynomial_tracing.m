@@ -13,16 +13,11 @@ addpath('../3_Final_reconstruction_volume/') ;
 % read in files: reconstruction volume
 Dsetvol     = importdata('MG_reconstruction_volume.mat');
 
-% apply very loose binary support to exclude artifact peaks far away from the
-% nanoparticle
-Support     = importdata('input/Loose_Support.mat');
-Dsetvol     = Dsetvol.*Support;
-
 % Th: intensity threshold for the local maxima pixel
 % local maxima with intensity less than this value will not be traced
 % because they are way too weak to become actual atoms
-MaxIter = 14;    CritIter = 7;         Th = 10; 
-Res = 0.347/3;   minDist = 1.75/Res;   SearchRad = 4;
+MaxIter = 14;       CritIter = 7;         Th        = 1; 
+Res     = 0.347/3;  minDist  = 2/Res;     SearchRad = 3;
 
 % upsampling the reconstruction matrix by 3*3*3 by linear interpolation
 % better to run at super conputer since the size of the interpolated
@@ -41,7 +36,7 @@ xxi = xxi(3:end); yyi = yyi(3:end); zzi = zzi(3:end);
 [Y,X,Z]     = meshgrid(yy,xx,zz);
 [Yi,Xi,Zi]  = meshgrid(yyi,xxi,zzi);
 
-Dsetvol     = interp3(Y,X,Z,Dsetvol,Yi,Xi,Zi,'linear',0);
+Dsetvol     = interp3(Y,X,Z,Dsetvol,Yi,Xi,Zi,'spline',0);
 FinalVol    = My_paddzero(Dsetvol,size(Dsetvol)+20);
 
 % get polynomial power array
@@ -66,7 +61,7 @@ dilatedBW   = imdilate(FinalVol,se);
 maxPos      = find(FinalVol==dilatedBW & FinalVol>Th);
 maxVals     = FinalVol(maxPos);
 [~,sortInd] = sort(maxVals,'descend');
-maxNum      = min(200000,length(sortInd));
+maxNum      = min(100000,length(sortInd));
 maxPos      = maxPos(sortInd(1:maxNum));
 
 fprintf(1,'numpeak = %d \n',length(maxPos));
@@ -98,51 +93,56 @@ for i=1:size(maxXYZ,1)
     endFlag = 0;
     consecAccum = 0;
     iterNum = 0;
-    while ~endFlag
+    while ~endFlag    
         iterNum = iterNum + 1;
         if iterNum>MaxIter
-            exitFlagArr(i) = -4;
-            endFlag = 1;
+          exitFlagArr(i) = -4;
+          endFlag = 1;
         end
         cropXind = maxXYZ(i,1) + (-cropHalfSize:cropHalfSize);
         cropYind = maxXYZ(i,2) + (-cropHalfSize:cropHalfSize);
         cropZind = maxXYZ(i,3) + (-cropHalfSize:cropHalfSize);
-        
+
         cropVol = FinalVol(cropXind,cropYind,cropZind);
-        
+
         Pos = PosArr(i,:);
         GaussWeight = exp(-1*Alpha*( (X(SphereInd)-Pos(1)).^2 + (Y(SphereInd)-Pos(2)).^2 + (Z(SphereInd)-Pos(3)).^2 ) / cropHalfSize^2 );
         
         fun = @(p,xdata) calculate_3D_polynomial_Rogers(xdata.X,xdata.Y,xdata.Z,Pos,Orders,p).*GaussWeight;
-        
+
         opts = optimset('Display','off');
         
         [p1,fminres1] = lsqcurvefit(fun,CoeffArr(:,i),XYZdata,cropVol(SphereInd).*GaussWeight,[],[],opts);
         CoeffArr(:,i) = p1;
         
         [dX, dY, dZ] = calc_dX_dY_dZ_Rogers(Orders,CoeffArr(:,i));
-        maxedShift = max([dX dY dZ],-1*[Q Q Q]);
-        minedShift = min(maxedShift,[Q Q Q]);
-        PosArr(i,:) = PosArr(i,:) + minedShift;
-        if max(abs(PosArr(i,:))) > cropHalfSize
-            exitFlagArr(i) = -2;
+        if dX ==-100 && dY == -100 && dZ == -100
+            exitFlagArr(i) = -1;
             endFlag = 1;
-        elseif max(abs(minedShift)) < Q
-            if consecAccum == CritIter-1
-                goodAtomTotPos = TotPosArr(1:i-1,:);
-                goodAtomTotPos = goodAtomTotPos(exitFlagArr(1:i-1)==0,:);
-                Dist = sqrt(sum((goodAtomTotPos - repmat(PosArr(i,:)+maxXYZ(i,:),[size(goodAtomTotPos,1) 1])).^2,2));
-                if min(Dist) < minDist
-                    exitFlagArr(i) = -3;
-                else
-                    TotPosArr(i,:) = PosArr(i,:) + maxXYZ(i,:);
-                end
-                endFlag = 1;
-            else
-                consecAccum = consecAccum + 1;
-            end
         else
-            consecAccum = 0;
+            maxedShift = max([dX dY dZ],-1*[Q Q Q]);
+            minedShift = min(maxedShift,[Q Q Q]);
+            PosArr(i,:) = PosArr(i,:) + minedShift;
+            if max(abs(PosArr(i,:))) > cropHalfSize
+                exitFlagArr(i) = -2;
+                endFlag = 1;
+            elseif max(abs(minedShift)) < Q
+                if consecAccum == CritIter-1
+                    goodAtomTotPos = TotPosArr(1:i-1,:);
+                    goodAtomTotPos = goodAtomTotPos(exitFlagArr(1:i-1)==0,:);
+                    Dist = sqrt(sum((goodAtomTotPos - repmat(PosArr(i,:)+maxXYZ(i,:),[size(goodAtomTotPos,1) 1])).^2,2));
+                    if min(Dist) < minDist
+                      exitFlagArr(i) = -3;
+                    else
+                      TotPosArr(i,:) = PosArr(i,:) + maxXYZ(i,:);
+                    end
+                    endFlag = 1;
+                else
+                    consecAccum = consecAccum + 1;
+                end
+            else
+                consecAccum = 0;
+            end
         end
     end
     fprintf(1,'peak %d, flag %d \n',i,exitFlagArr(i));

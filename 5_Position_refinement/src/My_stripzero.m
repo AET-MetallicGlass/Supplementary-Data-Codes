@@ -1,4 +1,6 @@
 % My_stripzero
+% Y. Yang, UCLA Physics & Astronomy
+% First version date: 2015. 07. 13.
 
 % output parameter: PadVol: padded N-d array
 % input parameters: PadVol (padded N-d array)   

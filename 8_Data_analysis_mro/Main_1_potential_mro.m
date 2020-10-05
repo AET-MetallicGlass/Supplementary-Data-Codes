@@ -19,9 +19,9 @@ atoms = atoms(:,cc);
 
 % [Step 1] Load positions and calculate neighbor matrix  
 
-R_UNIT  = 3.78;
-r_inner = 3.78/R_UNIT;  % r_inner and r_outer are unitless 
-r_outer = 6.09/R_UNIT; 
+R_UNIT  = 3.858;
+r_inner = 3.858/R_UNIT;  % r_inner and r_outer are unitless 
+r_outer = 6.079/R_UNIT; 
 pos = model'/R_UNIT;
 
 neigh = cell(size(pos,1),1);
