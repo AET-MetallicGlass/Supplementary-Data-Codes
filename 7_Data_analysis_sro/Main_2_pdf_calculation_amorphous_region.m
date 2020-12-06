@@ -1,6 +1,6 @@
 %% Main_2_pdf_calculation_amorphous_region
 % calculate both the pair distribution functions and partial pair distribution functions
-% with amorphous atoms only inside the metallic glass nanoparticle by the scaled boo
+% with amorphous atoms only inside the glass-forming nanoparticle by the scaled boo
 
 addpath('src/')
 addpath('input/')

@@ -1,6 +1,6 @@
 %% Main_1_pdf_and_boo_calculation_all_atoms
 % calculate the pair distribution functions and bond orientation order
-% with all atoms inside the metallic glass nanoparticle
+% with all atoms inside the glass-forming nanoparticle
 
 addpath('src/')
 addpath('input/')
