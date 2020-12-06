@@ -1,5 +1,5 @@
-%% Main_2_rdf_calculation_amorphous_region
-% calculate both the radial distribution functions and pair distribution functions
+%% Main_2_pdf_calculation_amorphous_region
+% calculate both the pair distribution functions and partial pair distribution functions
 % with amorphous atoms only inside the metallic glass nanoparticle by the scaled boo
 
 addpath('src/')
@@ -17,7 +17,7 @@ cc = scaled_boo_amor < 0.5;
 model = model(:,cc);
 atoms = atoms(:,cc);
 
-% set the parameters: step size and the range for rdf and pdf
+% set the parameters: step size and the range for pdf and ppdf
 res = 1;  step = 0.05;  cutoff = 20;
 
 % calculate the alpha shape of the nanoparticle
@@ -29,21 +29,21 @@ shp      = alphaShape(submodel(1,:)',submodel(2,:)',submodel(3,:)',4);
 [vMat,~] = spheretri(5000);
 nsample  = size(vMat,1);
 
-% initialize the radial distance and g(r) array for rdf
+% initialize the radial distance and g(r) array for pdf
 radius_arr = 0:step:cutoff;
-rdf_arr    = zeros([size(radius_arr,2),1]);
+pdf_arr    = zeros([size(radius_arr,2),1]);
 volume_arr = zeros([size(radius_arr,2),1]);
-pdf_arr    = zeros([size(radius_arr,2),3,3]);
+ppdf_arr    = zeros([size(radius_arr,2),3,3]);
 
-% perform the main part for rdf and pdf calculation
+% perform the main part for pdf and ppdf calculation
 for i=1:size(submodel,2)
     disp(num2str(i));
     
     temp_atom_arr   = atoms;
     temp_label      = temp_atom_arr(i);
-    rdf_arr_temp    = zeros([size(radius_arr,2),1]);
+    pdf_arr_temp    = zeros([size(radius_arr,2),1]);
     volume_arr_temp = zeros([size(radius_arr,2),1]);
-    pdf_arr_temp    = zeros([size(radius_arr,2),3,3]);
+    ppdf_arr_temp    = zeros([size(radius_arr,2),3,3]);
     
     for j = 1:size(submodel,2)
         
@@ -53,9 +53,9 @@ for i=1:size(submodel,2)
         % number to corresponding array postion
         if dis < cutoff
             ind = ceil(dis/step+0.01);
-            rdf_arr_temp(ind) = rdf_arr_temp(ind)+1;
-            pdf_arr_temp(ind,temp_label,temp_atom_arr(j)) = ...
-                pdf_arr_temp(ind,temp_label,temp_atom_arr(j)) + 1;
+            pdf_arr_temp(ind) = pdf_arr_temp(ind)+1;
+            ppdf_arr_temp(ind,temp_label,temp_atom_arr(j)) = ...
+                ppdf_arr_temp(ind,temp_label,temp_atom_arr(j)) + 1;
         end
         
     end
@@ -69,26 +69,26 @@ for i=1:size(submodel,2)
         volume_arr_temp(ind) = sum(in) / nsample * ( 4/3 * pi() * ((j+step)^3-j^3) );
     end
     
-    rdf_arr = rdf_arr + rdf_arr_temp;
     pdf_arr = pdf_arr + pdf_arr_temp;
+    ppdf_arr = ppdf_arr + ppdf_arr_temp;
     volume_arr = volume_arr + volume_arr_temp;
     
 end
-% plot rdf as following code
+% plot pdf as following code
 shp = alphaShape(model(1,:)',model(2,:)',model(3,:)',ceil(4));
 volume_alpha = volume(shp) + 4*pi()*90^2*0.1;
-rdf_arr(1) = 0;
-rdfnorm_arr= rdf_arr(:)./size(model,2)./(volume_arr(:)./volume_alpha);
+pdf_arr(1) = 0;
+pdfnorm_arr= pdf_arr(:)./size(model,2)./(volume_arr(:)./volume_alpha);
 radius_arr = radius_arr + 0.025;
-rdf_amor05 = rdfnorm_arr;
+pdf_amor05 = pdfnorm_arr;
 
-rdf_amor05(1) = 0;
-rdf_amor05(end) = rdf_amor05(end-1);
-rdf_amor05 = imgaussfilt(rdf_amor05,2);
-[base_g_sub1,ycorr_g_sub1] = baseline_normal(rdf_amor05);
-rdf_amor05 = ycorr_g_sub1 + base_g_sub1/base_g_sub1(end);
+pdf_amor05(1) = 0;
+pdf_amor05(end) = pdf_amor05(end-1);
+pdf_amor05 = imgaussfilt(pdf_amor05,2);
+[base_g_sub1,ycorr_g_sub1] = baseline_normal(pdf_amor05);
+pdf_amor05 = ycorr_g_sub1 + base_g_sub1/base_g_sub1(end);
 
 figure(21); set(gcf,'position',[0,50,1000,600]); 
 clf; hold on;
-plot(r_dist_arr,rdf_amor05,'LineWidth',2);
+plot(r_dist_arr,pdf_amor05,'LineWidth',2);
 
