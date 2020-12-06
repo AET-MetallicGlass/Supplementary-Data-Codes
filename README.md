@@ -85,7 +85,7 @@ The final 3D atomic model and chemical species (i.e. type 1, 2 and 3) of the met
 
 Folder: [Data_analysis_sro](./7_Data_analysis_sro)
 
-Run the code `Main_1_rdf_and_boo_calculation_all_atoms.m` to calculate the radial distribution function and the bond orientation order parameter for all the atoms in the metallic glass sample; Run the code `Main_2_rdf_calculation_amorphous_region.m` to compute the radial distribution function and pair distribution function for all the amorphous atoms in the sample; Run the code `Main_3_voronoi_calculation_amorphous_region.m` to determine the Voronoi indices for all the atoms in the sample.
+Run the code `Main_1_pdf_and_boo_calculation_all_atoms.m` to calculate the radial distribution function and the bond orientation order parameter for all the atoms in the metallic glass sample; Run the code `Main_2_pdf_calculation_amorphous_region.m` to compute the radial distribution function and pair distribution function for all the amorphous atoms in the sample; Run the code `Main_3_voronoi_calculation_amorphous_region.m` to determine the Voronoi indices for all the atoms in the sample.
 
 ### 8. Post Data Analysis —— Medium Range Order
 
