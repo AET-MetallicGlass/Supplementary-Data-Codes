@@ -11,7 +11,7 @@ Yao Yang<sup>1*</sup>, Jihan Zhou<sup>1*</sup>, Fan Zhu<sup>1*</sup>, Yakun Yuan
 **These authors contributed equally to this work.*    
 *†Correspondence and requests for materials should be addressed to J.M. (miao@physics.ucla.edu).*     
  
-[If you use any of the data and source codes in your publications and/or presentations, we request that you cite our paper: Y. Yang, J. Zhou, F. Zhu, Y. Yuan, D. Chang, D. S. Kim, M. Pham, A. Rana, X. Tian, Y. Yao, S. Osher, A. K. Schmid, L. Hu, P. Ercius and J. Miao, "Determining the three-dimensional atomic structure of an amorphous solid", _Nature_ **592**, 60–64 (2021).](#supplementary-data-codes)
+[If you use any of the data and source codes in your publications and/or presentations, we request that you cite our paper: Y. Yang, J. Zhou, F. Zhu, Y. Yuan, D. Chang, D. S. Kim, M. Pham, A. Rana, X. Tian, Y. Yao, S. Osher, A. K. Schmid, L. Hu, P. Ercius and J. Miao, "Determining the three-dimensional atomic structure of an amorphous solid", _Nature_ **592**, 60–64 (2021).](https://www.nature.com/articles/s41586-021-03354-0)
 
 ## Contents
 
