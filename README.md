@@ -1,6 +1,6 @@
 # Supplementary Data Codes 
 
-**Determining the three-dimensional atomic structure of a amorphous solid**
+**Determining the three-dimensional atomic structure of an amorphous solid**
 
 Yao Yang<sup>1*</sup>, Jihan Zhou<sup>1*</sup>, Fan Zhu<sup>1*</sup>, Yakun Yuan<sup>1*</sup>, Dillan Chang<sup>1</sup>, Dennis S. Kim<sup>1</sup>, Minh Pham<sup>2</sup>, Arjun Rana<sup>1</sup>, Xuezeng Tian<sup>1</sup>, Yonggang Yao<sup>3</sup>, Stanley Osher<sup>2</sup>, Andreas K. Schmid<sup>4</sup>, Liangbing Hu<sup>3</sup>, Peter Ercius<sup>4</sup> & Jianwei Miao<sup>1†</sup>    
 
@@ -10,7 +10,8 @@ Yao Yang<sup>1*</sup>, Jihan Zhou<sup>1*</sup>, Fan Zhu<sup>1*</sup>, Yakun Yuan
 *<sup>4</sup>National Center for Electron Microscopy, Molecular Foundry, Lawrence Berkeley National Laboratory, Berkeley, CA 94720, USA.*    
 **These authors contributed equally to this work.*    
 *†Correspondence and requests for materials should be addressed to J.M. (miao@physics.ucla.edu).*     
-   
+ 
+If you use any of the data and source codes in your publications and/or presentations, we request that you cite our paper: Y. Yang, J. Zhou, F. Zhu, Y. Yuan, D. Chang, D. S. Kim, M. Pham, A. Rana, X. Tian, Y. Yao, S. Osher, A. K. Schmid, L. Hu, P. Ercius and J. Miao, "Determining the three-dimensional atomic structure of an amorphous solid", _Nature_ **592**, 60–64 (2021).
 
 ## Contents
 
