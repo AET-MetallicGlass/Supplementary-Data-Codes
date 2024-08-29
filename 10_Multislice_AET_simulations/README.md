@@ -1,1 +1,3 @@
+Folders 1_recon, 2_tracing, and 3_posref respectively show the reconstruction, tracing and classification, and position refinement procedures for Multislice AET simulations based on experimental projections. Folder 4_results shows the RMSD between the final atom positions and the ground truth.
 
+Folder 5_simulation_with_noise shows the procedures and results for Multislice AET simulations with Poisson noise, which was added to each projection according to the electron dose. The doses were set to 1.7×104 e/Å2 (match with experiment) and 5.6×104 e/Å2 per projection. The reconstruction, tracing and classification, and RMSD calculation procedures and results were summarized in Folders Multislice_dose_1p7e4_per_proj and Multislice_dose_1p7e4_per_proj.
