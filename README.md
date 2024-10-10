@@ -99,3 +99,5 @@ Run the code `Main_1_potential_mro.m` to identify the possible MROs based on the
 Folder: [Supplementary_Figures](./9_Supplementary_figures)
 
 This file contains four Supplementary Figures.
+
+### 10. Multi-slice simulations
