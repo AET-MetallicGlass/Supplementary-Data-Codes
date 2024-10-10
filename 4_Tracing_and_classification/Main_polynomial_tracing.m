@@ -72,7 +72,7 @@ for i=1:length(maxPos)
     maxXYZ(i,:) = [xx yy zz];  
 end
 
-clear Xi Yi Zi Dsetvol dilatedBW
+clear Xi Yi Zi dilatedBW
 
 % initialize the parameters
 Q = 0.5;     Alpha = 1;
